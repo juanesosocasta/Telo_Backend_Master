@@ -1,0 +1,265 @@
+<div ng-controller = "EstablishmentListController">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Administraci&oacute;n de Establecimientos</h3>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <button class="btn btn-success" data-toggle="modal"  data-target="#createEstablishment"
+                                title="Crear tienda">Crear Establecimiento
+                        </button><br/>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <loading></loading>
+                        <p>B&uacute;squeda: <input class="form-control" type="text" ng-model="filter.$" /></p>
+                        <table ng-table="tableParams" class="table table-striped table-bordered">
+                            <tr ng-repeat="establishment in $data">
+                                <td align="center" data-title="'Codigo'" sortable="'id'">{{establishment.id}}</td>
+                                <td align="center" data-title="'Nombre'" sortable="'name'">{{establishment.name}}</td>
+                                <td align="center" data-title="'Direccion'" sortable="'address'">{{establishment.address}}</td>
+                                <td align="center" data-title="'Pista'" sortable="'hint'">{{establishment.hint}}</td>
+                                <td align="center" data-title="'Telefono'" sortable="'phone'">{{establishment.phone}}</td>
+                                <td align="center" data-title="'Ciudad'" sortable="'city.name'">{{establishment.city.name}}</td>
+                                <td align="center" data-title="'Edicion'" sortable="'updated_at'"><a href="#"><a data-toggle="modal" data-target="#updateEstablishment" ng-click="setEstablishmentUpdate(establishment)"><i class="fa fa-pencil-square-o"></i> Editar</a></a></td>
+                        </table>
+                        <p>Total:{{total}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- init modal create establishment -->
+    <div class="modal fade" id="createEstablishment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel2">Registro de nuevo establecimiento</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_panel">
+                                <div class="x_content">
+
+                                    <form class="form-horizontal form-label-left" name="formCreateEstablishment">
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nombre <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input id="name" class="form-control col-md-7 col-xs-12" name="name" placeholder="La cerveceria" ng-model='newEstablishment.name' ng-required="true" required type="text">
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Direccion
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" id="email" name="email" class="form-control col-md-7 col-xs-12"  ng-model='newEstablishment.address' placeholder="Calle 34 # 34-34">
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Latitud
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" id="latitude" name="latitude" class="form-control col-md-7 col-xs-12"  ng-model='newEstablishment.latitude'>
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Longitud
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" id="longitude" name="longitude" class="form-control col-md-7 col-xs-12"  ng-model='newEstablishment.longitude'>
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Pista
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" id="hint" name="hint" class="form-control col-md-7 col-xs-12"  ng-model='newEstablishment.hint'>
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Telefono
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" id="phone" name="phone" class="form-control col-md-7 col-xs-12"  ng-model='newEstablishment.phone' placeholder="+57 3145455444">
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Descripcion del negocio
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" id="description" name="description" class="form-control col-md-7 col-xs-12"  ng-model='newEstablishment.description'>
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="country_id">Pais <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <select id="country_id" class="form-control col-md-7 col-xs-12" name="country_id"  ng-model='newEstablishment.country_id'  ng-change="getListProvinces(newEstablishment.country_id)" ng-options="country.id as country.name for country in listCountries" type="text">
+                                                    <option>Selecciona un pais</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="province_id">Region <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <select id="province_id" class="form-control col-md-7 col-xs-12" name="province_id"  ng-model='newEstablishment.province_id' ng-change="getListCities(newEstablishment.province_id)"  ng-options="province.id as province.name for province in listProvinces" type="text">
+                                                    <option>Selecciona una region</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="city_id">Ciudad <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <select id="city_id" class="form-control col-md-7 col-xs-12" name="city_id"  ng-model='newEstablishment.city_id'  ng-options="city.id as city.name for city in listCities" type="text">
+                                                    <option>Selecciona una ciudad</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="ln_solid"></div>
+                                        <div class="form-group">
+                                            <div class="col-md-6 col-md-offset-3">
+                                                <button type="submit" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+                                                <button id="send" type="submit" class="btn btn-success" ng-click="formCreateEstablishment.$valid && createEstablishment()">Enviar</button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    <!-- end modal create Establishment -->
+
+
+    <!-- init modal update establishment -->
+    <div class="modal fade" id="updateEstablishment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Actualizacion de Establecimiento</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_panel">
+                                <div class="x_content">
+
+                                    <form class="form-horizontal form-label-left" name="formUpdateEstablishment">
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nombre <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input class="form-control col-md-7 col-xs-12" name="name" placeholder="BarX" ng-model='establishmentForUpdate.name' ng-required="true" required type="text">
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Direccion
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" name="email" class="form-control col-md-7 col-xs-12"  ng-model='establishmentForUpdate.address' placeholder="Calle 34 # 34-34" required>
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Latitud
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" id="latitude" name="latitude" class="form-control col-md-7 col-xs-12"  ng-model='establishmentForUpdate.latitude' required>
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Longitud
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" id="longitude" name="longitude" class="form-control col-md-7 col-xs-12"  ng-model='establishmentForUpdate.longitude' required>
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Pista
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" id="hint" name="hint" class="form-control col-md-7 col-xs-12"  ng-model='establishmentForUpdate.hint'>
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Telefono
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" id="phone" name="phone" class="form-control col-md-7 col-xs-12"  ng-model='establishmentForUpdate.phone' placeholder="+57 3145455444">
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Descripcion del negocio
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" id="description" name="description" class="form-control col-md-7 col-xs-12"  ng-model='establishmentForUpdate.description'>
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="country_id">Pais <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <select id="country_id" class="form-control col-md-7 col-xs-12" name="country_id"  ng-model='establishmentForUpdate.country_id'  ng-change="getListProvinces(establishmentForUpdate.country_id)" ng-options="country.id as country.name for country in listCountries" type="text">
+                                                    <option>Selecciona un pais</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="province_id">Region <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <select id="province_id" class="form-control col-md-7 col-xs-12" name="province_id"  ng-model='establishmentForUpdate.province_id'  ng-change="getListCities(establishmentForUpdate.province_id)"  ng-options="province.id as province.name for province in listProvinces" type="text">
+                                                    <option>Selecciona una region</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="city_id">Ciudad <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <select id="city_id" class="form-control col-md-7 col-xs-12" name="city_id"  ng-model='establishmentForUpdate.city_id'  ng-options="city.id as city.name for city in listCities" type="text">
+                                                    <option>Selecciona una ciudad</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="ln_solid"></div>
+                                        <div class="form-group">
+                                            <div class="col-md-6 col-md-offset-3">
+                                                <button type="submit" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+                                                <button id="send" type="submit" class="btn btn-success" ng-click="formUpdateEstablishment.$valid && updateEstablishment()">Enviar</button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+    <!-- end modal update Establishment -->
+</div>
