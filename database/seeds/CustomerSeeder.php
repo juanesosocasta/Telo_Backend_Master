@@ -24,5 +24,11 @@ class CustomerSeeder extends Seeder
             'email' => 'juan@admin.com',
             'password' => Hash::make('admin123')
         ]);
+        Customer::create([
+            'first_name' => 'Giomara',
+            'last_name' => 'Valencia',
+            'email' => 'giomara@admin.com',
+            'password' => Hash::make('admin1234')
+        ]);
     }
 }
