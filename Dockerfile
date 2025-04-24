@@ -29,6 +29,7 @@ RUN a2enmod rewrite && \
     echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
     cp docker/apache/000-default.conf /etc/apache2/sites-available/
 
+RUN docker-php-ext-install pdo pdo_pgsql
 # Copiar código de la aplicación
 COPY . /var/www/html
 
@@ -41,4 +42,7 @@ RUN composer install --no-dev --optimize-autoloader
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
     chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-EXPOSE 80
+# Configurar Apache para Render
+RUN echo "Listen 10000" > /etc/apache2/ports.conf
+
+EXPOSE 10000
