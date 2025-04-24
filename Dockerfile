@@ -1,6 +1,7 @@
-# Usar imagen oficial de PHP 7.4 con Apache
-FROM php:7.4-apache
+# Usar imagen base específica para evitar conflictos
+FROM php:7.4-apache-bullseye
 
+# Instalar dependencias del sistema y extensiones PHP
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
@@ -9,9 +10,8 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     libpq-dev \
-    # Extensiones adicionales para Laravel
-    libicu-dev \
-    && docker-php-ext-install \
+    libicu-dev && \
+    docker-php-ext-install \
         pdo \
         pdo_pgsql \
         mbstring \
@@ -20,47 +20,25 @@ RUN apt-get update && apt-get install -y \
         bcmath \
         gd \
         zip \
-        intl
+        intl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Aumenta el límite de memoria para Composer
-ENV COMPOSER_MEMORY_LIMIT=-1
+# Configurar Apache
+RUN a2enmod rewrite && \
+    echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
+    cp docker/apache/000-default.conf /etc/apache2/sites-available/
 
-# Instalar dependencias para PostgreSQL
-RUN apt-get update && apt-get install -y --no-install-recommends libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copia el código de la app al contenedor
+# Copiar código de la aplicación
 COPY . /var/www/html
 
-# Instala Composer (si no está ya en la imagen base)
+# Instalar Composer y dependencias
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-# Instala dependencias de Composer
+ENV COMPOSER_MEMORY_LIMIT=-1
 RUN composer install --no-dev --optimize-autoloader
 
+# Permisos para Laravel
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
+    chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-
-# Habilitar mod_rewrite de Apache
-RUN a2enmod rewrite
-
-# Copia la configuración de Apache
-COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
-
-# Configurar ServerName para Apache
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-
-# Instalar Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-# Copiar el proyecto al contenedor
-COPY . /var/www/html
-
-# Establecer directorio de trabajo
-WORKDIR /var/www/html
-
-# Establece permisos para Laravel
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
+EXPOSE 80
