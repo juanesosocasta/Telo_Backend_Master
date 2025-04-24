@@ -1,6 +1,14 @@
 # Usar imagen base específica para evitar conflictos
 FROM php:7.4-apache-bullseye
 
+# Copia la configuración de Apache ANTES de ejecutar comandos
+COPY docker/apache/000-default.conf /tmp/000-default.conf
+
+# Configura Apache
+RUN a2enmod rewrite && \
+    echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
+    mv /tmp/000-default.conf /etc/apache2/sites-available/000-default.conf
+
 # Instalar dependencias del sistema y extensiones PHP
 RUN apt-get update && apt-get install -y \
     libpng-dev \
@@ -24,10 +32,6 @@ RUN apt-get update && apt-get install -y \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Configurar Apache
-RUN a2enmod rewrite && \
-    echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
-    cp docker/apache/000-default.conf /etc/apache2/sites-available/
 
 RUN docker-php-ext-install pdo pdo_pgsql
 # Copiar código de la aplicación
