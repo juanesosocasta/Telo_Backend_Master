@@ -1,6 +1,15 @@
 # Usar imagen oficial de PHP 7.4 con Apache
 FROM php:7.4-apache
 
+# Copia el código de la app al contenedor
+COPY . /var/www/html
+
+# Instala Composer (si no está ya en la imagen base)
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Instala dependencias de Composer
+RUN composer install --no-dev --optimize-autoloader
+
 # Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
     libpng-dev \
