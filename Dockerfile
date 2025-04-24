@@ -25,6 +25,12 @@ RUN apt-get update && apt-get install -y \
 # Aumenta el límite de memoria para Composer
 ENV COMPOSER_MEMORY_LIMIT=-1
 
+# Instalar dependencias para PostgreSQL
+RUN apt-get update && apt-get install -y --no-install-recommends libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copia el código de la app al contenedor
 COPY . /var/www/html
 
