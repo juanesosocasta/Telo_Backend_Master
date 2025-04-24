@@ -1,6 +1,30 @@
 # Usar imagen oficial de PHP 7.4 con Apache
 FROM php:7.4-apache
 
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    libpq-dev \
+    # Extensiones adicionales para Laravel
+    libicu-dev \
+    && docker-php-ext-install \
+        pdo \
+        pdo_pgsql \
+        mbstring \
+        exif \
+        pcntl \
+        bcmath \
+        gd \
+        zip \
+        intl
+
+# Aumenta el límite de memoria para Composer
+ENV COMPOSER_MEMORY_LIMIT=-1
+
 # Copia el código de la app al contenedor
 COPY . /var/www/html
 
@@ -10,16 +34,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Instala dependencias de Composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Instalar dependencias del sistema
-RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libzip-dev \
-    zip \
-    unzip \
-    libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd zip
+
 
 # Habilitar mod_rewrite de Apache
 RUN a2enmod rewrite
