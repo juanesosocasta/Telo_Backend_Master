@@ -31,10 +31,9 @@ COPY docker/apache/000-default.conf /tmp/000-default.conf
 RUN a2enmod rewrite && \
     echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
     mv /tmp/000-default.conf /etc/apache2/sites-available/000-default.conf
-    
+
 # Instalar Composer y dependencias
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-ENV COMPOSER_MEMORY_LIMIT=-1
 RUN composer install --no-dev --optimize-autoloader
 
 # Instalar dependencias y extensiones para PostgreSQL
